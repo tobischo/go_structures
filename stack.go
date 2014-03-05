@@ -10,12 +10,6 @@ type Stack struct {
 	size int
 }
 
-// Unexposed helper structure to allow the stack to grow
-type element struct {
-	value interface{}
-	next  *element
-}
-
 // Adds any value to the stack
 func (stack *Stack) Push(value interface{}) {
 	stack.top = &element{value, stack.top}

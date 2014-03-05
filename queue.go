@@ -11,8 +11,6 @@ type Queue struct {
 	size  int
 }
 
-// element defined in stack.go
-
 // Adds any value to the queue
 func (queue *Queue) Enqueue(value interface{}) {
 	e := &element{}

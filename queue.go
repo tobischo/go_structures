@@ -16,7 +16,11 @@ func (queue *Queue) Enqueue(value interface{}) {
 	e := &element{}
 	e.value = value
 
-	queue.last.next = e
+	if queue.size == 0 {
+		queue.first = e
+	} else {
+		queue.last.next = e
+	}
 	queue.last = e
 
 	queue.size++
@@ -30,7 +34,12 @@ func (queue *Queue) Dequeue() (interface{}, error) {
 	}
 
 	value := queue.first.value
-	queue.first = queue.first.next
+	if queue.size == 1 {
+		queue.first = nil
+		queue.last = nil
+	} else {
+		queue.first = queue.first.next
+	}
 	queue.size--
 	return value, nil
 }

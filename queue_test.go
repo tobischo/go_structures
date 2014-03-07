@@ -49,9 +49,7 @@ func TestSingleDequeue(t *testing.T) {
 	queue.Enqueue(1)
 
 	value, err := queue.Dequeue()
-	if err != nil {
-		t.Errorf("Queue raised an error: %s", err)
-	}
+	checkError("Queue", err, t)
 
 	checkQueueSize(queue, t, 0)
 
@@ -78,7 +76,7 @@ func TestDequeueEmptyQueue(t *testing.T) {
 
 	_, err := queue.Dequeue()
 	if err == nil {
-		t.Errorf("Empty Queue did not raise an error")
+		t.Errorf("Empty Queue did not return an error")
 	}
 }
 
@@ -93,35 +91,25 @@ func TestDequeueMultiple(t *testing.T) {
 	checkFirstAndLastElementInt(queue, t, 1, 3)
 
 	value, err := queue.Dequeue()
-	if err != nil {
-		t.Errorf("Queue raised an error: %s", err)
-	}
+	checkError("Queue", err, t)
 
 	checkQueueSize(queue, t, 2)
 
-	if value.(int) != 1 {
-		t.Errorf("Element does not match: should be %d but is %d",
-			1, value.(int))
-	}
+	checkValueInt(value.(int), 1, t)
 
 	checkFirstAndLastElementInt(queue, t, 2, 3)
 
 	value, err = queue.Dequeue()
-	if err != nil {
-		t.Errorf("Queue raised an error: %s", err)
-	}
+	checkError("Queue", err, t)
 
 	checkQueueSize(queue, t, 1)
 
-	if value.(int) != 2 {
-		t.Errorf("Element does not match: should be %d but is %d",
-			2, value.(int))
-	}
+	checkValueInt(value.(int), 2, t)
 
 	checkFirstAndLastElementInt(queue, t, 3, 3)
 }
 
-func TestSize(t *testing.T) {
+func TestQueueSize(t *testing.T) {
 	queue := new(Queue)
 
 	checkQueueSize(queue, t, 0)
@@ -150,5 +138,18 @@ func checkFirstAndLastElementInt(q *Queue, t *testing.T, first int, last int) {
 	if q.last.value.(int) != last {
 		t.Errorf("Last Element does not match: should be %d but is %d",
 			last, q.first.value.(int))
+	}
+}
+
+func checkError(s string, err error, t *testing.T) {
+	if err != nil {
+		t.Errorf("%s returned an error: %s", s, err)
+	}
+}
+
+func checkValueInt(is int, should int, t *testing.T) {
+	if is != should {
+		t.Errorf("Element does not match: should be %d but is %d",
+			should, is)
 	}
 }
